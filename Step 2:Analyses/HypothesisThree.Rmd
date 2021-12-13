@@ -1,0 +1,32 @@
+
+
+```{r}
+
+library(timeSeries)
+library(readr)
+library(stats)
+```
+```{r}
+
+
+participants <- read_csv("Participants_FilledIn.csv", id = NULL)
+
+```
+
+I am predicting negativity based on date time and whether or not they are evangelical but I I wanted to control for txtfile as well(txt file is the number corresponding to the sermon it is from). 
+```{r}
+ev <- participants[participants$isEvangelical == TRUE,]
+
+non <- participants[participants$isEvangelical == FALSE,]
+
+ev_lm <- lm(negative~datetime+txtfile+isEvangelical, data = participants)
+
+# ev_cor <- ts(, )
+# ev_cor
+
+# ggplot(ev, aes(datetime, anger, groupby=code, color=code))+geom_smooth(method="lm")
+
+```
+
+
+

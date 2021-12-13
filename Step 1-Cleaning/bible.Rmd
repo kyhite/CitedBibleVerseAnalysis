@@ -1,0 +1,109 @@
+
+```{r}
+library(readr)
+library(syuzhet)
+```
+
+```{r}
+BibCSV <- as.data.frame(read_csv("Step 1-Cleaning/CSVFiles/BibCSV.csv", id = NULL))
+colnames(BibCSV) <- c("book", "chapter", "verse", "translation", "text")
+View(BibCSV)
+
+```
+
+```{r}
+
+BibCSV$ider <- ""
+for(int in 1:nrow(BibCSV)) {
+  new_ider <- paste(as.character(BibCSV$book[int]), as.character(BibCSV$chapter[int]), as.character(BibCSV$verse[int]), sep = "_")
+  print(new_ider)
+  BibCSV$ider[int] <- new_ider
+}
+
+```
+
+```{r}
+
+Building_Emotion <- BibCSV[,1:3]
+Building_Emotion$ider <- BibCSV$ider
+EmotionCSV <- unique(Building_Emotion)
+EmotionCSV
+```
+
+```{r}
+write_csv(EmotionCSV, "Step 1-Cleaning/CSVFiles/EmotionCSV_NotFilledIn.csv")
+#After moved to the new directory
+# EmotionCSV <- read_csv("Step 1-Cleaning/CSVFiles/EmotionCSV_NotFilledIn.csv")
+
+# EmotionCSV$anger <- 
+
+```
+
+
+```{r}
+find_mean_sentiment <- function(idx) {
+  # temp <- as.data.frame(EmotionCSV[idx,])
+  # print(colnames(temp))
+  # print("1")
+  verseTranslations <- BibCSV[as.character(BibCSV$book) == as.character(EmotionCSV$book[idx]),]
+  # print(verseTranslations)
+  # print("2")
+  verseTranslations <- verseTranslations[as.character(verseTranslations$chapter) == as.character(EmotionCSV$chapter[idx]),]
+  
+  # print("3")
+  verseTranslations <- verseTranslations[as.character(verseTranslations$verse) == as.character(EmotionCSV$verse[idx]),]
+  # print("4")
+  sentiment <- get_nrc_sentiment(verseTranslations$text)
+  syuzhet_sentiment <- get_sentiment(verseTranslations$text, method = "syuzhet")
+  afinn_sentiment <- get_sentiment(verseTranslations$text, method = "afinn")
+  bing_sentiment <- get_sentiment(verseTranslations$text, method = "bing")
+  
+  # print("5")
+  EmotionCSV$anger[idx] <<- mean(sentiment$anger)
+  EmotionCSV$anticipation[idx] <<- mean(sentiment$anticipation)
+  EmotionCSV$disgust[idx] <<- mean(sentiment$disgust)
+  EmotionCSV$fear[idx] <<- mean(sentiment$fear)
+  EmotionCSV$joy[idx] <<- mean(sentiment$joy)
+  EmotionCSV$sadness[idx] <<-  mean(sentiment$sadness)
+  EmotionCSV$surprise[idx] <<-  mean(sentiment$surprise)
+  EmotionCSV$trust[idx] <<-  mean(sentiment$trust)
+  EmotionCSV$negative[idx] <<-  mean(sentiment$negative)
+  EmotionCSV$positive[idx] <<-  mean(sentiment$positive)
+  EmotionCSV$afinn_analysis[idx] <<-  mean(afinn_sentiment)
+  EmotionCSV$syuzhet_analysis[idx] <<-  mean(syuzhet_sentiment)
+  EmotionCSV$bing_analysis[idx] <<-  mean(bing_sentiment)
+  # temp <- NA
+  
+}
+
+
+
+```
+
+
+```{r}
+pb <- txtProgressBar(min = 0,      # Minimum value of the progress bar
+                     max = nrow(EmotionCSV), # Maximum value of the progress bar
+                     style = 3,    # Progress bar style (also available style = 1 and style = 2)
+                     width = 59,   # Progress bar width. Defaults to getOption("width")
+                     char = "=")
+
+
+b <- 24572
+for(i in 24572:nrow(EmotionCSV)) {
+  # print(EmotionCSV[i,])
+  print(b)
+  find_mean_sentiment(b)
+  setTxtProgressBar(pb, b)
+  b <- b + 1
+}
+
+
+```
+
+
+```{r}
+write_csv(EmotionCSV, "Step 1-Cleaning/CSVFiles/EmotionCSV_NotFilledIn.csv")
+write_csv(EmotionCSV, "Step 1-Cleaning/CSVFiles/EmotionCSV_FilledIn.csv")
+```
+

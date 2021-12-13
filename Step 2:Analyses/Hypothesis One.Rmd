@@ -1,0 +1,73 @@
+
+
+
+
+```{r}
+
+library(readr)
+```
+
+```{r}
+participants <- read_csv("Participants_FilledIn.csv", id = NULL)
+
+```
+```{r}
+typeof(participants$isEvangelical)
+participants$isEvangelical <- as.logical(participants$isEvangelical)
+typeof(participants$isEvangelical)
+```
+
+```{r}
+t_test_anger <- t.test(participants$isEvangelical, participants$anger, method = "spearman")
+t_test_anticipation <- t.test(participants$isEvangelical, participants$anticipation, method = "spearman")
+t_test_disgust <- t.test(participants$isEvangelical, participants$disgust, method = "spearman")
+t_test_fear <- t.test(participants$isEvangelical, participants$fear, method = "spearman")
+t_test_joy <- t.test(participants$isEvangelical, participants$joy, method = "spearman")
+t_test_sadness  <- t.test(participants$isEvangelical, participants$sadness, method = "spearman")
+t_test_surprise  <- t.test(participants$isEvangelical, participants$surprise, method = "spearman")
+t_test_negative <- t.test(negative~isEvangelical,dat = participants, method = "spearman")
+t_test_positive  <- t.test(participants$isEvangelical, participants$positive)
+
+t_test_afinn  <- t.test(participants$isEvangelical, participants$afinn_analysis)
+t_test_syuzhet  <- t.test(participants$isEvangelical, participants$syuzhet_analysis)
+t_test_bing  <- t.test(participants$isEvangelical, participants$bing_analysis)
+
+"The main metric this is based on:"
+  "negative"
+t_test_negative
+
+
+  "positive"
+t_test_positive
+
+```
+
+
+```{r}
+"More exploratory"
+"anger:"
+t_test_anger
+"anticipation:"
+t_test_anticipation
+
+"disgust"
+t_test_disgust
+
+"fear"
+t_test_fear
+
+"joy"
+t_test_joy
+
+
+"these three are not part of the original metric. syuzhet is used mainly for academic work, afinn was originally created to rate content on how vulgar it was, and bing is focused on opinion words. They are included here only as a way of acting as a way of further testing and complimenting the original tests"
+"syuzhet"
+t_test_syuzhet
+
+"bing"
+t_test_bing
+
+"afinn"
+t_test_afinn
+
+```

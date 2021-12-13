@@ -1,0 +1,169 @@
+
+
+
+
+```{r}
+
+library(readr)
+```
+
+
+```{r}
+
+participants <- as.data.frame(read_csv("CSVFiles/Participants.csv", id = NULL))
+colnames(participants) <- c("book", "chapter", "verse", "code", "txtfile", "datetime", "denomination")
+
+
+```
+
+
+```{r}
+ii <- 1
+participants$ider <- rep("NA", nrow(participants))
+for (idx in 1:nrow(participants)) {            # 2. sequence
+  # get_SENT(ii)
+  # participants$ider[ii] 
+  participants$ider[idx] <- paste(as.character(participants$book[idx]), as.character(participants$chapter[idx]), as.character(participants$verse[idx]) ,sep="_")
+  print(ii)
+  ii <- ii + 1
+  
+}
+
+```
+
+```{r}
+
+write_csv(participants, "CSVFiles/Participants_FilledIn.csv")
+```
+
+```{r}
+
+EmotionCSV <- read_csv("CSVFiles/EmotionCSV_FilledIn.csv", id = NULL)
+
+```
+
+
+
+
+```{r}
+
+ participants$isEvangelical <- as.logical(rep(NA, nrow(participants)))
+# "nondenomiantional"
+
+participants$isEvangelical[participants$denomination =="pentecostal"] <-TRUE
+participants$isEvangelical[participants$denomination =="anabaptist"] <-TRUE
+participants$isEvangelical[participants$denomination =="apolistic"] <-TRUE
+participants$isEvangelical[participants$denomination =="assemblies of god"] <-TRUE
+participants$isEvangelical[participants$denomination =="baptist(historically black)"] <-TRUE
+
+participants$isEvangelical[participants$denomination =="baptist(historically black)(evangelical)"] <-TRUE
+
+participants$isEvangelical[participants$denomination =="church of christ"] <-TRUE
+participants$isEvangelical[participants$denomination =="church of god"] <-TRUE
+participants$isEvangelical[participants$denomination =="church of jesus christ of later day saints"] <-TRUE
+participants$isEvangelical[participants$denomination =="baptist"] <-TRUE
+participants$isEvangelical[participants$denomination =="evangelical (nondenominatonal)"] <-TRUE
+participants$isEvangelical[participants$denomination =="evangelical covenant church"] <-TRUE
+participants$isEvangelical[participants$denomination =="evangelical nondenominational"] <-TRUE
+participants$isEvangelical[participants$denomination =="evangelical protestant"] <-TRUE
+participants$isEvangelical[participants$denomination =="evangelical-protestant"] <-TRUE
+participants$isEvangelical[participants$denomination =="holiness"] <-TRUE
+participants$isEvangelical[participants$denomination =="lutheran(lcmc)"] <-TRUE
+participants$isEvangelical[participants$denomination =="lutheran (lcmc)"] <-TRUE
+participants$isEvangelical[participants$denomination =="lutheran(aalc)"] <-TRUE
+participants$isEvangelical[participants$denomination =="lutheran(lcms)"] <-TRUE
+participants$isEvangelical[participants$denomination =="methodist(independent)"] <-TRUE
+participants$isEvangelical[participants$denomination =="non-denominational"] <-TRUE
+participants$isEvangelical[participants$denomination =="nondenomination"] <-TRUE
+participants$isEvangelical[participants$denomination =="nondenomiantional"] <-TRUE
+participants$isEvangelical[participants$denomination =="nondenominational"] <-TRUE
+participants$isEvangelical[participants$denomination =="pentecostal"] <-TRUE
+participants$isEvangelical[participants$denomination =="pentecoastal"] <-TRUE
+participants$isEvangelical[participants$denomination =="reformationist"] <-TRUE
+participants$isEvangelical[participants$denomination =="restorationist"] <-TRUE
+participants$isEvangelical[participants$denomination =="seventh - day adventist"] <-TRUE
+participants$isEvangelical[participants$denomination =="seventh day adventist"] <-TRUE
+participants$isEvangelical[participants$denomination =="adventist"] <-TRUE
+participants$isEvangelical[participants$denomination =="seventh-day adventist"] <-TRUE
+participants$isEvangelical[participants$denomination =="the church of jesus christ of latter-day saints"] <-TRUE
+participants$isEvangelical[participants$denomination =="the church of the nazarene"] <-TRUE
+
+participants$isEvangelical[participants$denomination =="catholic"] <-FALSE
+participants$isEvangelical[participants$denomination =="disciples of christ"] <-FALSE
+participants$isEvangelical[participants$denomination =="lutheran(elca)"] <-FALSE
+participants$isEvangelical[participants$denomination =="lutheran(ric)"] <-FALSE
+participants$isEvangelical[participants$denomination =="methodist"] <-FALSE
+participants$isEvangelical[participants$denomination =="orthodox"] <-FALSE
+participants$isEvangelical[participants$denomination =="presbyterian"] <-FALSE
+participants$isEvangelical[participants$denomination =="unitarian universalist"] <-FALSE
+participants$isEvangelical[participants$denomination =="orthodox (greek)"] <-FALSE
+
+participants$isEvangelical[participants$denomination =="baptist(mainline)"] <-FALSE
+
+```
+
+
+```{r}
+write_csv(participants, "CSVFiles/Participants_FilledIn.csv")
+
+```
+```{r}
+ participants$anger <- rep(NA, nrow(participants))
+ participants$anticipation <- rep(NA, nrow(participants))
+ participants$disgust <- rep(NA, nrow(participants))
+ participants$fear <- rep(NA, nrow(participants))
+ participants$joy <- rep(NA, nrow(participants))
+ participants$sadness <- rep(NA, nrow(participants))
+ participants$surprise <- rep(NA, nrow(participants))
+ participants$negative <- rep(NA, nrow(participants))
+ participants$positive <- rep(NA, nrow(participants))
+ participants$afinn_anaysis <- rep(NA, nrow(participants))
+ participants$syuzhet_analysis <- rep(NA, nrow(participants))
+ participants$bing_analysis <- rep(NA, nrow(participants))
+```
+
+
+```{r}
+
+kk <- 1
+for(idx in seq_along(EmotionCSV$ider)) {
+  participants$anger[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$anger[kk]
+  participants$anticipation[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$anticipation[kk]
+  participants$disgust[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$disgust[kk]
+  participants$fear[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$fear[kk]
+  participants$joy[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$joy[kk]
+  participants$sadness[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$sadness[kk]
+  participants$surprise[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$surprise[kk]
+  participants$trust[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$trust[kk]
+  participants$negative[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$negative[kk]
+  participants$positive[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$positive[kk]
+  participants$afinn_analysis[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$afinn_analysis[kk]
+  participants$syuzhet_analysis[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$syuzhet_analysis[kk]
+  participants$bing_analysis[participants$ider == EmotionCSV$ider[kk]] <- EmotionCSV$bing_analysis[kk]
+  print(kk)
+  print(kk / nrow(EmotionCSV))
+  
+  
+  
+  kk <- kk + 1
+}
+```
+
+```{r}
+write_csv(participants, "CSVFiles/Participants_FilledIn.csv")
+
+```
+```{r}
+
+
+```
+```{r}
+
+
+```
+```{r}
+
+
+```
+
+
